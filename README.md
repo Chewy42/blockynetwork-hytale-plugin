@@ -27,7 +27,7 @@ This plugin connects your Hytale server to BlockyNetworks for account linking, s
 ```
 
 3. Copy the built jar from:
-   - `build/libs/BlockyNetwork-1.0-SNAPSHOT.jar`
+   - `build/libs/BlockyNetwork-1.0.1.jar`
 4. Put it in your server's `mods/` directory.
 5. Start the server once to generate config, then edit `blockynetwork.json`.
 
@@ -56,4 +56,3 @@ Expected keys:
 ## Release Downloads
 
 Use GitHub Releases for ready-to-use `.jar` files.
-
