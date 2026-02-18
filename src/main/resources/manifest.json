@@ -1,0 +1,7 @@
+{
+  "Group": "com.blockynetwork",
+  "Name": "BlockyNetwork",
+  "Version": "1.0.0",
+  "Main": "com.blockynetwork.BlockyNetworkPlugin",
+  "Description": "Server discovery and community networking for Hytale servers"
+}

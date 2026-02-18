@@ -1,0 +1,49 @@
+plugins {
+    id 'java'
+    id 'io.github.goooler.shadow' version '8.1.7'
+}
+
+group = 'com.blockynetwork'
+version = '1.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly files('libs/HytaleServer.jar')
+    testImplementation files('libs/HytaleServer.jar')
+
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.mockito:mockito-core:5.14.2'
+    testImplementation 'org.mockito:mockito-inline:5.2.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.14.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+    javaLauncher.set(javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(21)
+    })
+    // HytaleLogger expects HytaleLogManager to be installed at JVM startup.
+    jvmArgs '-Djava.util.logging.manager=com.hypixel.hytale.logger.backend.HytaleLogManager'
+}
+
+shadowJar {
+    archiveClassifier.set('')
+}
+
+tasks.jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from sourceSets.main.resources
+}
