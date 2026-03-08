@@ -1,4 +1,4 @@
-package com.blockynetwork.net;
+package com.blockynetworks.net;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -101,7 +101,7 @@ public class BlockyNetworksApi {
         HttpResponse<String> response = http.send(request, HttpResponse.BodyHandlers.ofString());
         int status = response.statusCode();
         if (status < 200 || status >= 300) {
-            logger.at(Level.WARNING).log("BlockyNetwork: HTTP %s from %s: %s", status, uri, response.body());
+            logger.at(Level.WARNING).log("BlockyNetworks: HTTP %s from %s: %s", status, uri, response.body());
             throw new RuntimeException("HTTP " + status);
         }
 
@@ -119,4 +119,3 @@ public class BlockyNetworksApi {
         public long expiresAt;
     }
 }
-

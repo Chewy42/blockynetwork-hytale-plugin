@@ -1,8 +1,8 @@
-package com.blockynetwork.commands;
+package com.blockynetworks.commands;
 
-import com.blockynetwork.BlockyNetworkPlugin;
-import com.blockynetwork.config.BlockyNetworkConfig;
-import com.blockynetwork.net.BlockyNetworksApi;
+import com.blockynetworks.BlockyNetworksPlugin;
+import com.blockynetworks.config.BlockyNetworksConfig;
+import com.blockynetworks.net.BlockyNetworksApi;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.AbstractCommand;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
@@ -15,14 +15,14 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
 public class LinkServerCommand extends AbstractCommand {
-    private final BlockyNetworkPlugin plugin;
+    private final BlockyNetworksPlugin plugin;
 
-    public LinkServerCommand(BlockyNetworkPlugin plugin) {
+    public LinkServerCommand(BlockyNetworksPlugin plugin) {
         super("server", "Generate a code to link this server to a BlockyNetworks organization");
         this.plugin = plugin;
 
         // Let server owners decide who can use this via permissions.json.
-        requirePermission("blockynetwork.linkserver");
+        requirePermission("blockynetworks.linkserver");
     }
 
     @Override
@@ -32,9 +32,9 @@ public class LinkServerCommand extends AbstractCommand {
             return CompletableFuture.completedFuture(null);
         }
 
-        BlockyNetworkConfig cfg = plugin.getConfigStore().get();
+        BlockyNetworksConfig cfg = plugin.getConfigStore().get();
         if (cfg.convexHttpUrl == null || cfg.convexHttpUrl.trim().isEmpty()) {
-            ctx.sendMessage(Message.raw("BlockyNetwork is not configured: set convexHttpUrl in the plugin config."));
+            ctx.sendMessage(Message.raw("BlockyNetworks is not configured: set convexHttpUrl in the plugin config."));
             return CompletableFuture.completedFuture(null);
         }
 
@@ -62,10 +62,9 @@ public class LinkServerCommand extends AbstractCommand {
                 ctx.sendMessage(Message.raw("Server link code: " + res.code + " (expires " + expires + ")"));
                 ctx.sendMessage(Message.raw("Enter this code in your Organization Settings -> Link Game Server."));
             } catch (Exception e) {
-                plugin.getLogger().at(Level.WARNING).withCause(e).log("BlockyNetwork: Failed to create server link code");
+                plugin.getLogger().at(Level.WARNING).withCause(e).log("BlockyNetworks: Failed to create server link code");
                 ctx.sendMessage(Message.raw("Failed to generate server link code. Check server logs."));
             }
         });
     }
 }
-

@@ -1,13 +1,13 @@
-package com.blockynetwork;
+package com.blockynetworks;
 
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class BlockyNetworkPluginTest {
+class BlockyNetworksPluginTest {
 
     @Test
     void pluginClassExists() {
-        assertNotNull(BlockyNetworkPlugin.class);
+        assertNotNull(BlockyNetworksPlugin.class);
     }
 }

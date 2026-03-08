@@ -1,4 +1,4 @@
-package com.blockynetwork.config;
+package com.blockynetworks.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -9,20 +9,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Level;
 
-public class BlockyNetworkConfigStore {
+public class BlockyNetworksConfigStore {
     private final Path path;
     private final Gson gson;
     private final HytaleLogger logger;
-    private BlockyNetworkConfig config;
+    private BlockyNetworksConfig config;
 
-    public BlockyNetworkConfigStore(Path path, HytaleLogger logger) {
+    public BlockyNetworksConfigStore(Path path, HytaleLogger logger) {
         this.path = path;
         this.logger = logger;
         this.gson = new GsonBuilder().setPrettyPrinting().create();
-        this.config = new BlockyNetworkConfig();
+        this.config = new BlockyNetworksConfig();
     }
 
-    public synchronized BlockyNetworkConfig get() {
+    public synchronized BlockyNetworksConfig get() {
         return config;
     }
 
@@ -35,13 +35,13 @@ public class BlockyNetworkConfigStore {
             }
 
             String json = Files.readString(path);
-            BlockyNetworkConfig loaded = gson.fromJson(json, BlockyNetworkConfig.class);
+            BlockyNetworksConfig loaded = gson.fromJson(json, BlockyNetworksConfig.class);
             if (loaded != null) {
                 this.config = loaded;
             }
         } catch (Exception e) {
-            logger.at(Level.WARNING).withCause(e).log("BlockyNetwork: Failed to load config, using defaults");
-            this.config = new BlockyNetworkConfig();
+            logger.at(Level.WARNING).withCause(e).log("BlockyNetworks: Failed to load config, using defaults");
+            this.config = new BlockyNetworksConfig();
         }
     }
 
@@ -50,7 +50,7 @@ public class BlockyNetworkConfigStore {
             Files.createDirectories(path.getParent());
             Files.writeString(path, gson.toJson(config));
         } catch (IOException e) {
-            logger.at(Level.WARNING).withCause(e).log("BlockyNetwork: Failed to save config");
+            logger.at(Level.WARNING).withCause(e).log("BlockyNetworks: Failed to save config");
         }
     }
 }

@@ -1,4 +1,4 @@
-# BlockyNetwork Hytale Plugin
+# BlockyNetworks Hytale Plugin
 
 Official Java companion plugin for BlockyNetworks.
 
@@ -27,15 +27,15 @@ This plugin connects your Hytale server to BlockyNetworks for account linking, s
 ```
 
 3. Copy the built jar from:
-   - `build/libs/BlockyNetwork-1.0.1.jar`
+   - `build/libs/BlockyNetworks-1.0.1.jar`
 4. Put it in your server's `mods/` directory.
-5. Start the server once to generate config, then edit `blockynetwork.json`.
+5. Start the server once to generate config, then edit `blockynetworks.json`.
 
 ## Configuration
 
 The plugin reads config from:
 
-- `plugins/BlockyNetwork/blockynetwork.json`
+- `plugins/BlockyNetworks/blockynetworks.json`
 
 Expected keys:
 
@@ -51,7 +51,7 @@ Expected keys:
 ## Commands
 
 - `/link` -> Generate a player link code
-- `/link server` -> Generate server link code (requires permission `blockynetwork.linkserver`)
+- `/link server` -> Generate server link code (requires permission `blockynetworks.linkserver`)
 
 ## Release Downloads
 

@@ -1,10 +1,10 @@
-package com.blockynetwork.commands;
+package com.blockynetworks.commands;
 
-import com.blockynetwork.BlockyNetworkPlugin;
-import com.blockynetwork.config.BlockyNetworkConfig;
-import com.blockynetwork.config.BlockyNetworkConfigStore;
-import com.blockynetwork.net.BlockyNetworksApi;
-import com.blockynetwork.testutil.TestLoggers;
+import com.blockynetworks.BlockyNetworksPlugin;
+import com.blockynetworks.config.BlockyNetworksConfig;
+import com.blockynetworks.config.BlockyNetworksConfigStore;
+import com.blockynetworks.net.BlockyNetworksApi;
+import com.blockynetworks.testutil.TestLoggers;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import org.junit.jupiter.api.Test;
@@ -27,19 +27,19 @@ class LinkServerCommandTest {
 
     @Test
     void setsExpectedPermissionNode() {
-        BlockyNetworkPlugin plugin = mock(BlockyNetworkPlugin.class);
+        BlockyNetworksPlugin plugin = mock(BlockyNetworksPlugin.class);
         LinkServerCommand cmd = new LinkServerCommand(plugin);
-        assertEquals("blockynetwork.linkserver", cmd.getPermission());
+        assertEquals("blockynetworks.linkserver", cmd.getPermission());
     }
 
     @Test
     void execute_savesServerSecret(@TempDir Path tempDir) throws Exception {
-        BlockyNetworkPlugin plugin = mock(BlockyNetworkPlugin.class);
+        BlockyNetworksPlugin plugin = mock(BlockyNetworksPlugin.class);
         when(plugin.getLogger()).thenReturn(TestLoggers.noop());
 
-        Path configPath = tempDir.resolve("blockynetwork.json");
-        BlockyNetworkConfigStore store = new BlockyNetworkConfigStore(configPath, TestLoggers.noop());
-        BlockyNetworkConfig cfg = store.get();
+        Path configPath = tempDir.resolve("blockynetworks.json");
+        BlockyNetworksConfigStore store = new BlockyNetworksConfigStore(configPath, TestLoggers.noop());
+        BlockyNetworksConfig cfg = store.get();
         cfg.convexHttpUrl = "http://localhost:1234";
         cfg.serverId = "";
         cfg.serverName = "  My Server  ";
@@ -76,4 +76,3 @@ class LinkServerCommandTest {
         assertTrue(savedJson.contains("secret-xyz"));
     }
 }
-

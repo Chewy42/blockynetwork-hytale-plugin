@@ -1,6 +1,6 @@
-package com.blockynetwork.net;
+package com.blockynetworks.net;
 
-import com.blockynetwork.testutil.TestLoggers;
+import com.blockynetworks.testutil.TestLoggers;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

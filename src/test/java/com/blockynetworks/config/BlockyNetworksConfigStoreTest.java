@@ -1,6 +1,6 @@
-package com.blockynetwork.config;
+package com.blockynetworks.config;
 
-import com.blockynetwork.testutil.TestLoggers;
+import com.blockynetworks.testutil.TestLoggers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -11,18 +11,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class BlockyNetworkConfigStoreTest {
+class BlockyNetworksConfigStoreTest {
 
     @Test
     void load_createsFileWithDefaultsWhenMissing(@TempDir Path tempDir) {
-        Path configPath = tempDir.resolve("blockynetwork.json");
+        Path configPath = tempDir.resolve("blockynetworks.json");
 
-        BlockyNetworkConfigStore store = new BlockyNetworkConfigStore(configPath, TestLoggers.noop());
+        BlockyNetworksConfigStore store = new BlockyNetworksConfigStore(configPath, TestLoggers.noop());
         store.load();
 
         assertTrue(Files.exists(configPath));
 
-        BlockyNetworkConfig cfg = store.get();
+        BlockyNetworksConfig cfg = store.get();
         assertNotNull(cfg);
         assertEquals("", cfg.convexHttpUrl);
         assertEquals("", cfg.serverId);
@@ -32,7 +32,7 @@ class BlockyNetworkConfigStoreTest {
 
     @Test
     void load_readsExistingConfig(@TempDir Path tempDir) throws Exception {
-        Path configPath = tempDir.resolve("blockynetwork.json");
+        Path configPath = tempDir.resolve("blockynetworks.json");
         Files.writeString(
                 configPath,
                 """
@@ -45,10 +45,10 @@ class BlockyNetworkConfigStoreTest {
                         """
         );
 
-        BlockyNetworkConfigStore store = new BlockyNetworkConfigStore(configPath, TestLoggers.noop());
+        BlockyNetworksConfigStore store = new BlockyNetworksConfigStore(configPath, TestLoggers.noop());
         store.load();
 
-        BlockyNetworkConfig cfg = store.get();
+        BlockyNetworksConfig cfg = store.get();
         assertNotNull(cfg);
         assertEquals("http://localhost:1234", cfg.convexHttpUrl);
         assertEquals("server-123", cfg.serverId);
@@ -58,13 +58,13 @@ class BlockyNetworkConfigStoreTest {
 
     @Test
     void load_invalidJson_fallsBackToDefaults(@TempDir Path tempDir) throws Exception {
-        Path configPath = tempDir.resolve("blockynetwork.json");
+        Path configPath = tempDir.resolve("blockynetworks.json");
         Files.writeString(configPath, "{ not valid json");
 
-        BlockyNetworkConfigStore store = new BlockyNetworkConfigStore(configPath, TestLoggers.noop());
+        BlockyNetworksConfigStore store = new BlockyNetworksConfigStore(configPath, TestLoggers.noop());
         store.load();
 
-        BlockyNetworkConfig cfg = store.get();
+        BlockyNetworksConfig cfg = store.get();
         assertNotNull(cfg);
         assertEquals("", cfg.convexHttpUrl);
         assertEquals("", cfg.serverId);
@@ -74,10 +74,10 @@ class BlockyNetworkConfigStoreTest {
 
     @Test
     void save_writesUpdatedConfig(@TempDir Path tempDir) throws Exception {
-        Path configPath = tempDir.resolve("blockynetwork.json");
+        Path configPath = tempDir.resolve("blockynetworks.json");
 
-        BlockyNetworkConfigStore store = new BlockyNetworkConfigStore(configPath, TestLoggers.noop());
-        BlockyNetworkConfig cfg = store.get();
+        BlockyNetworksConfigStore store = new BlockyNetworksConfigStore(configPath, TestLoggers.noop());
+        BlockyNetworksConfig cfg = store.get();
         cfg.convexHttpUrl = "http://localhost:4444";
         cfg.serverId = "server-1";
         cfg.serverSecret = "secret-1";
@@ -92,4 +92,3 @@ class BlockyNetworkConfigStoreTest {
         assertTrue(json.contains("\"serverName\": \"Example\""));
     }
 }
-

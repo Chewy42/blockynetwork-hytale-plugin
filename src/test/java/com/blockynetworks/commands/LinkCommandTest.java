@@ -1,10 +1,10 @@
-package com.blockynetwork.commands;
+package com.blockynetworks.commands;
 
-import com.blockynetwork.BlockyNetworkPlugin;
-import com.blockynetwork.config.BlockyNetworkConfig;
-import com.blockynetwork.config.BlockyNetworkConfigStore;
-import com.blockynetwork.net.BlockyNetworksApi;
-import com.blockynetwork.testutil.TestLoggers;
+import com.blockynetworks.BlockyNetworksPlugin;
+import com.blockynetworks.config.BlockyNetworksConfig;
+import com.blockynetworks.config.BlockyNetworksConfigStore;
+import com.blockynetworks.net.BlockyNetworksApi;
+import com.blockynetworks.testutil.TestLoggers;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.CommandSender;
@@ -30,7 +30,7 @@ class LinkCommandTest {
 
     @Test
     void registersServerSubcommand() {
-        BlockyNetworkPlugin plugin = mock(BlockyNetworkPlugin.class);
+        BlockyNetworksPlugin plugin = mock(BlockyNetworksPlugin.class);
         LinkCommand cmd = new LinkCommand(plugin);
 
         assertTrue(cmd.getSubCommands().containsKey("server"));
@@ -38,7 +38,7 @@ class LinkCommandTest {
 
     @Test
     void execute_whenNotPlayer_sendsMessage() {
-        BlockyNetworkPlugin plugin = mock(BlockyNetworkPlugin.class);
+        BlockyNetworksPlugin plugin = mock(BlockyNetworksPlugin.class);
         LinkCommand cmd = new LinkCommand(plugin);
 
         CommandContext ctx = mock(CommandContext.class);
@@ -53,11 +53,11 @@ class LinkCommandTest {
 
     @Test
     void execute_whenNotConfigured_sendsMessage(@TempDir Path tempDir) {
-        BlockyNetworkPlugin plugin = mock(BlockyNetworkPlugin.class);
+        BlockyNetworksPlugin plugin = mock(BlockyNetworksPlugin.class);
         when(plugin.getLogger()).thenReturn(TestLoggers.noop());
 
-        BlockyNetworkConfigStore store = new BlockyNetworkConfigStore(
-                tempDir.resolve("blockynetwork.json"),
+        BlockyNetworksConfigStore store = new BlockyNetworksConfigStore(
+                tempDir.resolve("blockynetworks.json"),
                 TestLoggers.noop()
         );
         when(plugin.getConfigStore()).thenReturn(store);
@@ -71,17 +71,17 @@ class LinkCommandTest {
 
         ArgumentCaptor<Message> captor = ArgumentCaptor.forClass(Message.class);
         verify(ctx).sendMessage(captor.capture());
-        assertTrue(captor.getValue().getRawText().contains("BlockyNetwork is not configured"));
+        assertTrue(captor.getValue().getRawText().contains("BlockyNetworks is not configured"));
     }
 
     @Test
     void execute_generatesServerId_andCallsApi(@TempDir Path tempDir) throws Exception {
-        BlockyNetworkPlugin plugin = mock(BlockyNetworkPlugin.class);
+        BlockyNetworksPlugin plugin = mock(BlockyNetworksPlugin.class);
         when(plugin.getLogger()).thenReturn(TestLoggers.noop());
 
-        Path configPath = tempDir.resolve("blockynetwork.json");
-        BlockyNetworkConfigStore store = new BlockyNetworkConfigStore(configPath, TestLoggers.noop());
-        BlockyNetworkConfig cfg = store.get();
+        Path configPath = tempDir.resolve("blockynetworks.json");
+        BlockyNetworksConfigStore store = new BlockyNetworksConfigStore(configPath, TestLoggers.noop());
+        BlockyNetworksConfig cfg = store.get();
         cfg.convexHttpUrl = "http://localhost:1234";
         cfg.serverId = "";
 

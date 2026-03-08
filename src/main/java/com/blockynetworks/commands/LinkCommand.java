@@ -1,8 +1,8 @@
-package com.blockynetwork.commands;
+package com.blockynetworks.commands;
 
-import com.blockynetwork.BlockyNetworkPlugin;
-import com.blockynetwork.config.BlockyNetworkConfig;
-import com.blockynetwork.net.BlockyNetworksApi;
+import com.blockynetworks.BlockyNetworksPlugin;
+import com.blockynetworks.config.BlockyNetworksConfig;
+import com.blockynetworks.net.BlockyNetworksApi;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.AbstractCommand;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
@@ -16,9 +16,9 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
 public class LinkCommand extends AbstractCommand {
-    private final BlockyNetworkPlugin plugin;
+    private final BlockyNetworksPlugin plugin;
 
-    public LinkCommand(BlockyNetworkPlugin plugin) {
+    public LinkCommand(BlockyNetworksPlugin plugin) {
         super("link", "Generate a code to link your in-game account to BlockyNetworks");
         this.plugin = plugin;
 
@@ -32,9 +32,9 @@ public class LinkCommand extends AbstractCommand {
             return CompletableFuture.completedFuture(null);
         }
 
-        BlockyNetworkConfig cfg = plugin.getConfigStore().get();
+        BlockyNetworksConfig cfg = plugin.getConfigStore().get();
         if (cfg.convexHttpUrl == null || cfg.convexHttpUrl.trim().isEmpty()) {
-            ctx.sendMessage(Message.raw("BlockyNetwork is not configured: set convexHttpUrl in the plugin config."));
+            ctx.sendMessage(Message.raw("BlockyNetworks is not configured: set convexHttpUrl in the plugin config."));
             return CompletableFuture.completedFuture(null);
         }
 
@@ -60,7 +60,7 @@ public class LinkCommand extends AbstractCommand {
                 ctx.sendMessage(Message.raw("Your link code: " + res.code + " (expires " + expires + ")"));
                 ctx.sendMessage(Message.raw("Enter this code on the BlockyNetworks website to link your account."));
             } catch (Exception e) {
-                plugin.getLogger().at(Level.WARNING).withCause(e).log("BlockyNetwork: Failed to create player link code");
+                plugin.getLogger().at(Level.WARNING).withCause(e).log("BlockyNetworks: Failed to create player link code");
                 ctx.sendMessage(Message.raw("Failed to generate link code. Check server logs."));
             }
         });
