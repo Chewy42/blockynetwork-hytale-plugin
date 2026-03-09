@@ -1,6 +1,6 @@
-package com.blockynetwork.config;
+package com.blockynetworks.config;
 
-public class BlockyNetworkConfig {
+public class BlockyNetworksConfig {
     public String convexHttpUrl = "";
     public String serverId = "";
     public String serverSecret = "";

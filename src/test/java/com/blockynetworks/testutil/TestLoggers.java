@@ -1,4 +1,4 @@
-package com.blockynetwork.testutil;
+package com.blockynetworks.testutil;
 
 import com.hypixel.hytale.logger.HytaleLogger;
 
@@ -11,7 +11,7 @@ public final class TestLoggers {
     public static HytaleLogger noop() {
         // The Hytale logger backend is safe to use for unit tests as long as the
         // JUL log manager is configured via JVM args (see build.gradle).
-        HytaleLogger logger = HytaleLogger.get("BlockyNetworkTest");
+        HytaleLogger logger = HytaleLogger.get("BlockyNetworksTest");
         logger.setLevel(Level.OFF);
         return logger;
     }

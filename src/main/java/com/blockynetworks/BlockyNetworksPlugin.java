@@ -1,9 +1,9 @@
-package com.blockynetwork;
+package com.blockynetworks;
 
-import com.blockynetwork.commands.LinkCommand;
-import com.blockynetwork.config.BlockyNetworkConfig;
-import com.blockynetwork.config.BlockyNetworkConfigStore;
-import com.blockynetwork.net.BlockyNetworksApi;
+import com.blockynetworks.commands.LinkCommand;
+import com.blockynetworks.config.BlockyNetworksConfig;
+import com.blockynetworks.config.BlockyNetworksConfigStore;
+import com.blockynetworks.net.BlockyNetworksApi;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.event.events.player.PlayerConnectEvent;
@@ -17,30 +17,36 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
-public class BlockyNetworkPlugin extends JavaPlugin {
+public class BlockyNetworksPlugin extends JavaPlugin {
 
     private static final long HEARTBEAT_SECONDS = 20;
+    private static final String CURRENT_CONFIG_FILENAME = "blockynetworks.json";
+    private static final String LEGACY_PLUGIN_DIRECTORY = "BlockyNetwork";
+    private static final String LEGACY_CONFIG_FILENAME = "blockynetwork.json";
 
-    private BlockyNetworkConfigStore configStore;
+    private BlockyNetworksConfigStore configStore;
     private BlockyNetworksApi api;
     private ScheduledExecutorService heartbeatExecutor;
     private final ConcurrentHashMap<UUID, String> onlinePlayers = new ConcurrentHashMap<>();
 
-    public BlockyNetworkPlugin(JavaPluginInit init) {
+    public BlockyNetworksPlugin(JavaPluginInit init) {
         super(init);
     }
 
     @Override
     protected void setup() {
-        getLogger().at(Level.INFO).log("BlockyNetwork: Setup phase...");
+        getLogger().at(Level.INFO).log("BlockyNetworks: Setup phase...");
 
-        Path configPath = getDataDirectory().resolve("blockynetwork.json");
-        this.configStore = new BlockyNetworkConfigStore(configPath, getLogger());
+        Path dataDirectory = getDataDirectory();
+        Path configPath = dataDirectory.resolve(CURRENT_CONFIG_FILENAME);
+        Path legacyConfigPath = resolveLegacyConfigPath(dataDirectory);
+
+        this.configStore = new BlockyNetworksConfigStore(configPath, legacyConfigPath, getLogger());
         this.configStore.load();
 
-        BlockyNetworkConfig cfg = this.configStore.get();
+        BlockyNetworksConfig cfg = this.configStore.get();
         if (cfg.convexHttpUrl == null || cfg.convexHttpUrl.trim().isEmpty()) {
-            getLogger().at(Level.WARNING).log("BlockyNetwork: convexHttpUrl is not set in %s", configPath);
+            getLogger().at(Level.WARNING).log("BlockyNetworks: convexHttpUrl is not set in %s", configPath);
         } else {
             this.api = new BlockyNetworksApi(cfg.convexHttpUrl, getLogger());
         }
@@ -48,7 +54,7 @@ public class BlockyNetworkPlugin extends JavaPlugin {
 
     @Override
     protected void start() {
-        getLogger().at(Level.INFO).log("BlockyNetwork: Started successfully!");
+        getLogger().at(Level.INFO).log("BlockyNetworks: Started successfully!");
 
         // Commands
         getCommandRegistry().registerCommand(new LinkCommand(this));
@@ -66,7 +72,7 @@ public class BlockyNetworkPlugin extends JavaPlugin {
 
         // Heartbeat to BlockyNetworks (best-effort).
         this.heartbeatExecutor = Executors.newSingleThreadScheduledExecutor((r) -> {
-            Thread t = new Thread(r, "BlockyNetwork-Heartbeat");
+            Thread t = new Thread(r, "BlockyNetworks-Heartbeat");
             t.setDaemon(true);
             return t;
         });
@@ -75,7 +81,7 @@ public class BlockyNetworkPlugin extends JavaPlugin {
 
     @Override
     protected void shutdown() {
-        getLogger().at(Level.INFO).log("BlockyNetwork: Shutting down...");
+        getLogger().at(Level.INFO).log("BlockyNetworks: Shutting down...");
 
         if (heartbeatExecutor != null) {
             heartbeatExecutor.shutdownNow();
@@ -86,7 +92,7 @@ public class BlockyNetworkPlugin extends JavaPlugin {
     private void sendHeartbeatSafe() {
         if (configStore == null) return;
 
-        BlockyNetworkConfig cfg = configStore.get();
+        BlockyNetworksConfig cfg = configStore.get();
         if (cfg.convexHttpUrl == null || cfg.convexHttpUrl.trim().isEmpty()) return;
         if (cfg.serverId == null || cfg.serverId.trim().isEmpty()) return;
         if (cfg.serverSecret == null || cfg.serverSecret.trim().isEmpty()) return;
@@ -99,16 +105,16 @@ public class BlockyNetworkPlugin extends JavaPlugin {
 
             api.sendHeartbeat(cfg.serverId.trim(), cfg.serverSecret.trim(), onlinePlayers);
         } catch (Exception e) {
-            getLogger().at(Level.FINE).withCause(e).log("BlockyNetwork: Heartbeat failed");
+            getLogger().at(Level.FINE).withCause(e).log("BlockyNetworks: Heartbeat failed");
         }
     }
 
-    public BlockyNetworkConfigStore getConfigStore() {
+    public BlockyNetworksConfigStore getConfigStore() {
         return configStore;
     }
 
     public BlockyNetworksApi getApi() {
-        BlockyNetworkConfig cfg = configStore != null ? configStore.get() : null;
+        BlockyNetworksConfig cfg = configStore != null ? configStore.get() : null;
         if (cfg == null) {
             throw new IllegalStateException("Config store not initialized");
         }
@@ -116,5 +122,13 @@ public class BlockyNetworkPlugin extends JavaPlugin {
             api = new BlockyNetworksApi(cfg.convexHttpUrl, getLogger());
         }
         return api;
+    }
+
+    private Path resolveLegacyConfigPath(Path dataDirectory) {
+        Path parent = dataDirectory.getParent();
+        if (parent == null) {
+            return dataDirectory.resolveSibling(LEGACY_PLUGIN_DIRECTORY).resolve(LEGACY_CONFIG_FILENAME);
+        }
+        return parent.resolve(LEGACY_PLUGIN_DIRECTORY).resolve(LEGACY_CONFIG_FILENAME);
     }
 }
