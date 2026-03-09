@@ -91,4 +91,40 @@ class BlockyNetworksConfigStoreTest {
         assertTrue(json.contains("\"serverSecret\": \"secret-1\""));
         assertTrue(json.contains("\"serverName\": \"Example\""));
     }
+
+    @Test
+    void load_migratesLegacyConfigWhenPrimaryMissing(@TempDir Path tempDir) throws Exception {
+        Path configPath = tempDir.resolve("BlockyNetworks").resolve("blockynetworks.json");
+        Path legacyPath = tempDir.resolve("BlockyNetwork").resolve("blockynetwork.json");
+        Files.createDirectories(legacyPath.getParent());
+        Files.writeString(
+                legacyPath,
+                """
+                        {
+                          "convexHttpUrl": "http://localhost:9876",
+                          "serverId": "legacy-server",
+                          "serverSecret": "legacy-secret",
+                          "serverName": "Legacy Server"
+                        }
+                        """
+        );
+
+        BlockyNetworksConfigStore store = new BlockyNetworksConfigStore(configPath, legacyPath, TestLoggers.noop());
+        store.load();
+
+        BlockyNetworksConfig cfg = store.get();
+        assertNotNull(cfg);
+        assertEquals("http://localhost:9876", cfg.convexHttpUrl);
+        assertEquals("legacy-server", cfg.serverId);
+        assertEquals("legacy-secret", cfg.serverSecret);
+        assertEquals("Legacy Server", cfg.serverName);
+        assertTrue(Files.exists(configPath));
+        assertTrue(Files.exists(legacyPath));
+
+        String migratedJson = Files.readString(configPath);
+        assertTrue(migratedJson.contains("\"convexHttpUrl\": \"http://localhost:9876\""));
+        assertTrue(migratedJson.contains("\"serverId\": \"legacy-server\""));
+        assertTrue(migratedJson.contains("\"serverSecret\": \"legacy-secret\""));
+        assertTrue(migratedJson.contains("\"serverName\": \"Legacy Server\""));
+    }
 }

@@ -29,7 +29,7 @@ class LinkServerCommandTest {
     void setsExpectedPermissionNode() {
         BlockyNetworksPlugin plugin = mock(BlockyNetworksPlugin.class);
         LinkServerCommand cmd = new LinkServerCommand(plugin);
-        assertEquals("blockynetworks.linkserver", cmd.getPermission());
+        assertEquals("blockynetwork.linkserver", cmd.getPermission());
     }
 
     @Test

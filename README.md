@@ -31,11 +31,18 @@ This plugin connects your Hytale server to BlockyNetworks for account linking, s
 4. Put it in your server's `mods/` directory.
 5. Start the server once to generate config, then edit `blockynetworks.json`.
 
+Existing installs are migrated automatically from the legacy path
+`plugins/BlockyNetwork/blockynetwork.json` on first load. The original file is
+left in place so you can roll back safely.
+
 ## Configuration
 
 The plugin reads config from:
 
 - `plugins/BlockyNetworks/blockynetworks.json`
+
+Legacy installs using `plugins/BlockyNetwork/blockynetwork.json` are migrated
+forward automatically when the new file does not exist yet.
 
 Expected keys:
 
@@ -51,7 +58,7 @@ Expected keys:
 ## Commands
 
 - `/link` -> Generate a player link code
-- `/link server` -> Generate server link code (requires permission `blockynetworks.linkserver`)
+- `/link server` -> Generate server link code (requires permission `blockynetwork.linkserver`, kept for backward compatibility)
 
 ## Release Downloads
 

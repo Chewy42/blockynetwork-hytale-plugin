@@ -15,14 +15,16 @@ import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
 public class LinkServerCommand extends AbstractCommand {
+    private static final String LEGACY_PERMISSION_NODE = "blockynetwork.linkserver";
+
     private final BlockyNetworksPlugin plugin;
 
     public LinkServerCommand(BlockyNetworksPlugin plugin) {
         super("server", "Generate a code to link this server to a BlockyNetworks organization");
         this.plugin = plugin;
 
-        // Let server owners decide who can use this via permissions.json.
-        requirePermission("blockynetworks.linkserver");
+        // Keep the legacy permission node so existing permission configs keep working.
+        requirePermission(LEGACY_PERMISSION_NODE);
     }
 
     @Override

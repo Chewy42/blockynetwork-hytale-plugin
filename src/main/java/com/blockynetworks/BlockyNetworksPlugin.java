@@ -20,6 +20,9 @@ import java.util.logging.Level;
 public class BlockyNetworksPlugin extends JavaPlugin {
 
     private static final long HEARTBEAT_SECONDS = 20;
+    private static final String CURRENT_CONFIG_FILENAME = "blockynetworks.json";
+    private static final String LEGACY_PLUGIN_DIRECTORY = "BlockyNetwork";
+    private static final String LEGACY_CONFIG_FILENAME = "blockynetwork.json";
 
     private BlockyNetworksConfigStore configStore;
     private BlockyNetworksApi api;
@@ -34,8 +37,11 @@ public class BlockyNetworksPlugin extends JavaPlugin {
     protected void setup() {
         getLogger().at(Level.INFO).log("BlockyNetworks: Setup phase...");
 
-        Path configPath = getDataDirectory().resolve("blockynetworks.json");
-        this.configStore = new BlockyNetworksConfigStore(configPath, getLogger());
+        Path dataDirectory = getDataDirectory();
+        Path configPath = dataDirectory.resolve(CURRENT_CONFIG_FILENAME);
+        Path legacyConfigPath = resolveLegacyConfigPath(dataDirectory);
+
+        this.configStore = new BlockyNetworksConfigStore(configPath, legacyConfigPath, getLogger());
         this.configStore.load();
 
         BlockyNetworksConfig cfg = this.configStore.get();
@@ -116,5 +122,13 @@ public class BlockyNetworksPlugin extends JavaPlugin {
             api = new BlockyNetworksApi(cfg.convexHttpUrl, getLogger());
         }
         return api;
+    }
+
+    private Path resolveLegacyConfigPath(Path dataDirectory) {
+        Path parent = dataDirectory.getParent();
+        if (parent == null) {
+            return dataDirectory.resolveSibling(LEGACY_PLUGIN_DIRECTORY).resolve(LEGACY_CONFIG_FILENAME);
+        }
+        return parent.resolve(LEGACY_PLUGIN_DIRECTORY).resolve(LEGACY_CONFIG_FILENAME);
     }
 }
